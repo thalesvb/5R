@@ -44,6 +44,7 @@ export default class StationPlayerController extends BaseController {
                     this.stationModel.setProperty("/volumeIcon", audio.volume < 0.5 ? StationPlayerController.icon_sound_low : StationPlayerController.icon_sound_loud );
                 }
             });
+            MediaSession.hookStopAction(()=>this.onStop());
             return audio;
         });
     }
