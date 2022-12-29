@@ -25,6 +25,12 @@ export default class Component extends UIComponent {
         this.getRouter().initialize()
 
         sap.ui.getCore().getMessageManager().registerObject(this, true)
+
+        // Register Type validation model on global context, because... well,
+        // there is no documentation about how to access it from a custom
+        // data type, everyone deserves translated validation messages.
+        let typeValidationModel = this.getModel("typeValidation");
+        sap.ui.getCore().setModel(typeValidationModel, "type_val");
     }
 
     public getContentDensityClass(): string {

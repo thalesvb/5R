@@ -54,6 +54,7 @@
             "compact": true,
             "cozy": true
         },
+        "handleValidation": true,
         "models": {
             "": {
                 "type": "thalesvb.5R.model.LocalStorageModel",
@@ -63,6 +64,16 @@
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
                     "bundleName": "thalesvb.5R.i18n.i18n",
+                    "supportedLocales": [
+                        ""
+                    ],
+                    "fallbackLocale": ""
+                }
+            },
+            "typeValidation": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "thalesvb.5R.i18n.type_validation",
                     "supportedLocales": [
                         ""
                     ],
