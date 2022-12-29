@@ -1,0 +1,161 @@
+{
+    "_version": "1.21.0",
+    "sap.app": {
+        "id": "thalesvb.5R",
+        "type": "application",
+        "resources": "resources.json",
+        "i18n": {
+            "bundleUrl": "i18n/i18n.properties",
+            "supportedLocales": [
+                ""
+            ],
+            "fallbackLocale": ""
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "dataSources": {
+            "mainStorage": {
+                "type": "JSON",
+                "uri": "5R.appStorage.json"
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "sap-icon://SAP-icons-TNT/signal",
+            "favIcon": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "thalesvb.5R.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "root_app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.109.0",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {},
+                "sap.f": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "": {
+                "type": "thalesvb.5R.model.LocalStorageModel",
+                "dataSource": "mainStorage"
+            },
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "thalesvb.5R.i18n.i18n",
+                    "supportedLocales": [
+                        ""
+                    ],
+                    "fallbackLocale": ""
+                }
+            }
+        },
+        "resources": {
+            "js": [
+                { "uri": "model/LocalStorageModel.js"},
+                { "uri": "model/UrlType.js"}
+            ],
+            "css": [
+                { "uri": "css/styles.css" }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.f.routing.Router",
+                "type": "View",
+                "viewType": "XML",
+                "path": "thalesvb.5R.view",
+                "controlId": "layout",
+                "controlAggregation": "beginColumnPages",
+                "bypassed": {
+                    "target": "notFound"
+                },
+                "async": true
+            },
+            "routes": [
+                {
+                    "pattern": "edit",
+                    "name": "masterEdit",
+                    "target": "master"
+                },
+                {
+                    "pattern": "",
+                    "name": "master",
+                    "target": "master"
+                },
+                {
+                    "pattern": "Station/create",
+                    "name": "stationCreate",
+                    "target": [
+                        "master",
+                        "stationDetail"
+                    ]
+                },
+                {
+                    "pattern": "Station/{stationGuid}/edit",
+                    "name": "stationEdit",
+                    "target": [
+                        "master",
+                        "stationDetail"
+                    ]
+                },
+                {
+                    "pattern": "Station/{stationGuid}",
+                    "name": "stationPlayer",
+                    "target": [
+                        "master",
+                        "stationPlayer"
+                    ]
+                }
+            ],
+            "targets": {
+                "master": {
+                    "name": "Master",
+                    "level": 1,
+                    "id": "master"
+                },
+                "stationDetail": {
+                    "name": "StationDetail",
+                    "level": 1,
+                    "controlAggregation": "midColumnPages",
+                    "id": "stationDetail"
+                },
+                "stationPlayer": {
+                    "name": "StationPlayer",
+                    "level": 1,
+                    "controlAggregation": "midColumnPages",
+                    "id": "stationPlayer"
+                },
+                "stationNotFound": {
+                    "name": "StationNotFound",
+                    "controlAggregation": "midColumnPages",
+                    "id": "stationNotFound"
+                },
+                "notFound": {
+                    "name": "NotFound",
+                    "id": "notFound"
+                }
+            }
+        }
+    }
+}

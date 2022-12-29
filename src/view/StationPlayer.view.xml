@@ -1,0 +1,63 @@
+<mvc:View
+    controllerName="thalesvb.5R.controller.StationPlayer"
+    xmlns="sap.m"
+    xmlns:custom="thalesvb.5R.control"
+    xmlns:semantic="sap.f.semantic"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:l="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+
+    <semantic:SemanticPage id="page"
+        busy="{detailView>/busy}"
+        busyIndicatorDelay="{detailView>/delay}"
+        showFooter="true">
+        <semantic:titleHeading>
+            <Title
+                text="{name}"/>
+        </semantic:titleHeading>
+        <semantic:headerContent>
+        </semantic:headerContent>
+        <semantic:content>
+            
+            <HBox
+                height="100%"
+                alignItems="Center"
+                justifyContent="Center"
+                renderType="Bare">
+                <Button press=".togglePlay" icon="{stationView>/playbackButton}" type="Transparent"/>
+                <Button press=".onStop" icon="sap-icon://stop" type="Transparent"/>
+                
+                <Slider value="100" width="10em" liveChange=".handleVolumeSlider"/>
+                <Button press=".toggleMute" icon="{stationView>/volumeIcon}" type="Transparent"/>
+                <html:audio id="audioPlayer"
+                    controls="true"
+                    style="display:none;"
+                    />
+            </HBox>
+        </semantic:content>
+        <semantic:editAction>
+            <semantic:EditAction id="edit"
+                press=".onEdit"/>
+        </semantic:editAction>
+        <semantic:closeAction>
+            <semantic:CloseAction id="closeColumn"
+                press=".onCloseStation"/>
+        </semantic:closeAction>
+        <semantic:fullScreenAction>
+            <semantic:FullScreenAction id="enterFullScreen"
+                visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+                press=".toggleFullScreen"/>
+        </semantic:fullScreenAction>
+        <semantic:exitFullScreenAction>
+			<semantic:ExitFullScreenAction id="exitFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+				press=".toggleFullScreen"/>
+		</semantic:exitFullScreenAction>
+        <semantic:footerCustomActions>
+            <Button press=".togglePlay" icon="{stationView>/playbackButton}" type="Transparent"/>
+            <Button press=".onStop" icon="sap-icon://stop" type="Transparent"/>
+            <Button press=".toggleMute" icon="{stationView>/volumeIcon}" type="Transparent"/>
+        </semantic:footerCustomActions>
+    </semantic:SemanticPage>
+
+</mvc:View>

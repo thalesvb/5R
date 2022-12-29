@@ -1,0 +1,82 @@
+<mvc:View
+    controllerName="thalesvb.5R.controller.Master"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:semantic="sap.f.semantic">
+    <semantic:SemanticPage id="page">
+        <semantic:titleHeading>
+            <Title id="masterHeaderTitle"
+                text="{i18n>masterTitleCount} {= ${/stations}.length}"/>
+        </semantic:titleHeading>
+        <semantic:content>
+            <List id="list"
+                width="auto"
+                class="sapFDynamicPageAlignContent"
+                items="{
+                    path: '/stations',
+                    parameters: {}
+                }"
+                busyIndicatorDelay="{masterView>/delay}"
+                noDataText="{masterView>/noDataText}"
+                mode="{masterView>/listMode}"
+                growing="true"
+                growingScrollToLoad="true"
+                delete=".onDelete"
+                updateFinished=".onUpdateFinished"
+                selectionChange=".onSelectionChange">
+
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <SearchField id="searchField"
+                            showRefreshButton="false"
+                            tooltip="{i18n>masterSearchTooltip}"
+                            width="100%"
+                            search=".onSearch"
+                            liveChange=".onSearch">
+                            <layoutData>
+                                <OverflowToolbarLayoutData
+                                    minWidth="150px"
+                                    maxWidth="240px"
+                                    shrinkable="true"
+                                    priority="NeverOverflow"/>
+                            </layoutData>
+                        </SearchField>
+                        <ToolbarSpacer/>
+                        <Button id="addStation"
+                            press=".onAddStation"
+                            visible="{
+                                path: 'masterView>/mode',
+                                formatter: '.editableFormatter.display'
+                            }"
+                            icon="sap-icon://add"/>
+                        <Button id="editStationList"
+                            press=".onEditStationList"
+                            visible="{
+                                path: 'masterView>/mode',
+                                formatter: '.editableFormatter.display'
+                            }"
+                            icon="sap-icon://edit"/>
+                        <Button id="doneEditStationList"
+                            press=".onDoneEditStationList"
+                            visible="{
+                                path: 'masterView>/mode',
+                                formatter: '.editableFormatter.edit'
+                            }"
+                            type="Emphasized"
+                            text="Done" />
+
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <items>
+                    <ObjectListItem
+                        type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}"
+                        press=".onSelectionChange"
+                        title="{name}">
+                    </ObjectListItem>
+                </items>
+            </List>
+
+        </semantic:content>
+    </semantic:SemanticPage>
+</mvc:View>

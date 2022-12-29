@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>5R Radio App</title>
+
+	<!-- keep index.html mocked as well for consistency -->
+	<script
+		id='sap-ui-bootstrap'
+		src='/resources/sap-ui-core.js'
+		data-sap-ui-theme='sap_fiori_3_dark'
+		data-sap-ui-compatVersion="edge"
+		data-sap-ui-async="true"
+		data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+		data-sap-ui-resourceroots='{
+			"thalesvb.5R" : "./",
+			"thalesvb.5R.mock": "./localService/mockdata"
+		}'>
+	</script>
+
+</head>
+<body class='sapUiBody' id='content'>
+	<div data-sap-ui-component data-name="thalesvb.5R" data-id="container" data-settings='{"id" : "5R"}'></div>
+</body>
+</html>

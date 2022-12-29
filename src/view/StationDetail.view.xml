@@ -1,0 +1,37 @@
+<mvc:View
+    controllerName="thalesvb.5R.controller.StationDetail"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc">
+    <Page id="stationDetailPage"
+        title="{i18n>stationDetailTitle}"
+        showHeader="true">
+        <headerContent>
+	        <Button id="edit"
+                text="Edit"
+                visible="{
+                    path: 'detailView>/mode',
+                    formatter: '.editableFormatter.display'
+                }"
+                press="handleEditPress" />
+			<Button id="save"
+                text="Save"
+                press=".onSave"
+                type="Emphasized"
+                visible="{
+                    path: 'detailView>/mode',
+                    formatter: '.editableFormatter.edit'
+                }"
+                icon="sap-icon://save" />
+			<Button id="cancel"
+                text="Cancel"
+                visible="{
+                    path: 'detailView>/mode',
+                    formatter: '.editableFormatter.edit'
+                }"
+                press=".onClose" />
+        </headerContent>
+        <content>
+        </content>
+    </Page>
+
+</mvc:View>

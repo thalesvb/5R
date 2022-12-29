@@ -1,0 +1,19 @@
+{
+    "stations": [
+        {
+            "guid": "b221779a-7ea7-41a8-ab2c-2f8bb91d4153",
+            "name": "Dummy Radio",
+            "url": "http_test"
+        },
+        {
+            "guid": "e14861e3-b48e-4ae9-be25-70cc882756a0",
+            "name": "98 Live",
+            "url": "https://9554.brasilstream.com.br/stream"
+        },
+        {
+            "guid": "c6fb84ae-0dc1-4b3c-8f43-17c427bb8302",
+            "name": "RFI Monde",
+            "url": "http://live02.rfi.fr/rfimonde-64.mp3"
+        }
+    ]
+}
