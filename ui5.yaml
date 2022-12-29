@@ -16,6 +16,8 @@ builder:
     excludes:
       - "/localService/**"
       - "/test/**"
+  cachebuster:
+    signatureType: hash
   customTasks:
     - name: thalesvb/nuke
       afterTask: generateVersionInfo
@@ -25,6 +27,8 @@ builder:
           - "**/*.xml"
           - "**/*.js"
           - "!**/Component-preload.js"
+    - name: cacheBusterShaker
+      afterTask: generateCachebusterInfo
 
 server:
   customMiddleware:
@@ -44,3 +48,13 @@ server:
       extraExts: "xml,json,properties"
       port: 35729
       path: "webapp"
+
+---
+# Task extension as part of your project
+specVersion: "2.6"
+kind: extension
+type: task
+metadata:
+  name: cacheBusterShaker
+task:
+  path: task/CacheBusterShaker.js

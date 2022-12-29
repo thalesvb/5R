@@ -8,7 +8,7 @@
       "build": "npm-run-all build:delete_webapp build:ts build:ui5",
       "build:delete_webapp": "rimraf webapp/",
       "build:ts": "babel src --out-dir webapp --extensions \".ts,.js\" --copy-files",
-      "build:ui5": "ui5 build --clean-dest --exclude-task createDebugFiles",
+      "build:ui5": "ui5 build --clean-dest --include-task generateCachebusterInfo --exclude-task createDebugFiles",
       "build:ui5:selfcontained": "ui5 build self-contained --clean-dest",
       "doc_content:build": "cd dummy_doc && ui5 build --config dummy_doc/ui5.yaml",
       "lint": "eslint src",
