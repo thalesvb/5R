@@ -2,6 +2,7 @@ import SimpleType from "sap/ui/model/SimpleType"
 import ValidateException from "sap/ui/model/ValidateException";
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R.model
  */
 export default class UrlType extends SimpleType {

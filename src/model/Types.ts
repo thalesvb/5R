@@ -1,3 +1,7 @@
+/*
+ * @copyright ${copyright}
+ */
+
 type Station = {
     guid: string,
     name: string,

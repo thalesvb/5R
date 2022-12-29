@@ -7,6 +7,7 @@ import BaseController from "./BaseController";
 import MediaSession from "../util/MediaSession";
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R.controller
  */
 export default class StationPlayerController extends BaseController {

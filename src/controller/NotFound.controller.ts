@@ -3,6 +3,7 @@ import JSONModel from "sap/ui/model/json/JSONModel";
 import BaseController from "./BaseController";
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R.controller
  */
 export default class NotFoundController extends BaseController {

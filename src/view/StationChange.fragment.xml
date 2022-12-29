@@ -1,3 +1,6 @@
+<!--
+    @copyright@
+-->
 <core:FragmentDefinition
     controller.name="thalesvb.5R.controller.StationEdit"
     xmlns="sap.m"

@@ -1,6 +1,7 @@
 import Object from "sap/ui/base/Object";
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R.util
  */
 export default class MediaSession extends Object {

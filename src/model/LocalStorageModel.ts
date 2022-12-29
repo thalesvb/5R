@@ -5,6 +5,7 @@ import Storage from "sap/ui/util/Storage"
 import {Type as StorageType} from "sap/ui/util/Storage"
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R.model
  */
  export default class LocalStorageModel extends JSONModel {

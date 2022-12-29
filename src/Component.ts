@@ -4,6 +4,7 @@ import JSONModel from "sap/ui/model/json/JSONModel";
 import ListSelector from "./util/ListSelector";
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R
  */
 export default class Component extends UIComponent {

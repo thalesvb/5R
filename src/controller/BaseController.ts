@@ -10,6 +10,7 @@ import Model from "sap/ui/model/Model";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R.controller
  */
 export default class BaseController extends Controller {

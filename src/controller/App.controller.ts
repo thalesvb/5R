@@ -3,6 +3,7 @@ import JSONModel from "sap/ui/model/json/JSONModel";
 import Component from "src/Component";
 
 /**
+ * @copyright ${copyright}
  * @namespace thalesvb.5R.controller
  */
 export default class AppController extends BaseController {
