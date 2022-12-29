@@ -12,7 +12,9 @@
             layout="ResponsiveGridLayout">
             <f:content>
                 <Label text="{i18n>stationNameLabel}"/>
-                <Input id="name" value="{
+                <Input id="name"
+                    required="true"
+                    value="{
                     path: 'name',
                     type: 'sap.ui.model.type.String',
                     constraints: {
@@ -20,7 +22,9 @@
                     }
                     }"/>
                 <Label text="{i18n>stationUrlLabel}"/>
-                <Input id="url" value="{
+                <Input id="url"
+                    required="true"
+                    value="{
                     path: 'url',
                     type: 'thalesvb.5R.model.UrlType'
                     }"/>
