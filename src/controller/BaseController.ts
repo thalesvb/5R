@@ -41,12 +41,14 @@ export default class BaseController extends Controller {
         if (this.fragments === undefined) {
             this.fragments = new Map();
         }
-        let view = this.getView(),
-            fragment = this.fragments.get(name);
+        let fragment = this.fragments.get(name);
         if (!fragment) {
+            const view = this.getView();
+            const controller = view.getController();
             fragment = Fragment.load({
                 id: view.getId(),
-                name: `thalesvb.5R.view.${name}`
+                name: `thalesvb.5R.view.${name}`,
+                controller: controller
             }) as Promise<Control>;
             this.fragments.set(name, fragment);
             fragment.then((frag) => view.addDependent(frag));
