@@ -12,9 +12,21 @@
     <App id="app"
         busy="{appView>/busy}"
         busyIndicatorDelay="{appView>/delay}">
-        <f:FlexibleColumnLayout id="layout"
-            layout="{appView>/layout}"
-            backgroundDesign="Translucent"/>
+        <Page>
+            <customHeader>
+                <f:ShellBar
+                    title="{i18n>appTitle}"
+                    showNotifications="true"
+                    notificationsPressed=".handleNotificationsPress"
+                    notificationsNumber="{= ${notifications>/}.length}">
+                </f:ShellBar>
+            </customHeader>
+            <content>
+                <f:FlexibleColumnLayout id="layout"
+                    layout="{appView>/layout}"
+                    backgroundDesign="Solid"/>
+            </content>
+        </Page>
     </App>
 
 </mvc:View>

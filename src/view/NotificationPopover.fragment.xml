@@ -1,0 +1,30 @@
+<!--
+    @copyright@
+-->
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <ResponsivePopover
+        title="{i18n>notificationsTitle}"
+        class="sapUiContentPadding"
+        placement="Bottom">
+        <endButton>
+            <Button id="notificationsDismissAll"
+                text="{i18n>notificationsDismissAll}"
+                press=".handleDismissNotification"/>
+        </endButton>
+
+        <content>
+            <List
+                mode="Delete"
+                delete=".handleDismissNotification"
+                items="{notifications>/}">
+                <StandardListItem
+                    title="{notifications>message}"
+                    description="{notifications>description}"/>
+            </List>
+        </content>
+    </ResponsivePopover>
+
+</core:FragmentDefinition>

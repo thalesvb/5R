@@ -60,6 +60,9 @@
                 "type": "thalesvb.5R.model.LocalStorageModel",
                 "dataSource": "mainStorage"
             },
+            "notifications": {
+                "type": "sap.ui.model.message.MessageModel"
+            },
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
