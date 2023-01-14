@@ -43,6 +43,7 @@ export default class Component extends UIComponent {
 
         const resBundle = (this.getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;
 
+        PWA.register();
         PWA.bindConnectivityEvents(
             ()=>{ notif.addNotifications(new Message({message: resBundle.getText("connectivityOnline") })) },
             ()=>{ notif.addNotifications(new Message({message: resBundle.getText("connectivityOffline")})) }

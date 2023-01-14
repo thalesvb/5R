@@ -1,0 +1,33 @@
+{
+    "name": "5R Radio Player",
+    "short_name": "5R",
+    "description": "A simple audio streaming player,",
+    "start_url": "/5R/index.html",
+    "display": "standalone",
+    "theme_color": "#333333",
+    "background_color": "#aaaaaa",
+    "scope": "/5R/",
+    "icons": [
+        {
+            "src": "https://i.imgur.com/zpKliym.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "https://i.imgur.com/WqqglRs.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://i.imgur.com/ZC8No4V.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "https://i.imgur.com/4fNE1Nf.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

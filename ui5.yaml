@@ -1,4 +1,4 @@
-specVersion: '2.2'
+specVersion: '2.3'
 metadata:
   name: thalesvb.5R
   copyright: |-
@@ -18,6 +18,9 @@ builder:
       - "/test/**"
   cachebuster:
     signatureType: hash
+  componentPreload:
+    excludes:
+      - "**/sw.js"
   customTasks:
     - name: thalesvb/nuke
       afterTask: generateVersionInfo
@@ -26,6 +29,7 @@ builder:
           - "**/*.properties"
           - "**/*.xml"
           - "**/*.js"
+          - "!**/sw.js"
           - "!**/Component-preload.js"
     - name: cacheBusterShaker
       afterTask: generateCachebusterInfo
