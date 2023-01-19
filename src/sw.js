@@ -62,12 +62,6 @@ class CacheBusterWorker {
         cache.put(request, response);
     }
     async fetchHandler(e) {
-        if (//e.request.url.includes("/resources/") || // UI Framework
-            e.request.url.endsWith(".webmanifest") ||
-            !e.request.url.startsWith(location.origin)) // Development stuff
-            {
-            return fetch(e.request);
-        }
         const r = await caches.match(e.request);
         console.debug(`[Service Worker] Fetching resource: ${e.request.url}`);
         if (r) {
