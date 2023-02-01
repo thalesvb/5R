@@ -79,7 +79,7 @@ export default class StationDetailController extends BaseController {
 
         (this.getModel("appView") as JSONModel).setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
         (this.getOwnerComponent() as Component).listSelector.clearMasterListSelection();
-        this.getRouter().navTo("master");
+        this.onNavBack();
     }
 
     private showFormFragment(operation: string): void {

@@ -60,11 +60,10 @@ export default class StationPlayerController extends BaseController {
     }
 
     onEdit(): void {
-        let replace = !DeviceSystem.phone;
         (this.getModel("appView") as JSONModel).setProperty("/layout", "TwoColumnsMidExpanded");
         this.getRouter().navTo("stationEdit", {
             stationGuid: this.stationGuid
-        }, undefined, replace);
+        });
     }
 
     onStop(): void {

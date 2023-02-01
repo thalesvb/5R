@@ -1,4 +1,4 @@
-import { ListMode } from "sap/m/library";
+import { ListMode, ListType } from "sap/m/library";
 import List from "sap/m/List";
 import ObjectListItem from "sap/m/ObjectListItem";
 import Event from "sap/ui/base/Event";
@@ -45,7 +45,8 @@ export default class MasterController extends BaseController {
 
         this.masterModel = new JSONModel({
             "mode": EditableView.mode.Display,
-            "listMode": ListMode.SingleSelectMaster
+            "listItemType": ListType.Active,
+            "listMode": ListMode.SingleSelectMaster,
         });
         this.setModel(this.masterModel, "masterView");
 
@@ -57,11 +58,13 @@ export default class MasterController extends BaseController {
     onMasterMatched(): void {
         (this.getModel("appView")as JSONModel).setProperty("/layout", "OneColumn");
         this.masterModel.setProperty("/mode", EditableView.mode.Display);
+        this.masterModel.setProperty("/listItemType", ListType.Active);
         this.masterModel.setProperty("/listMode", ListMode.SingleSelectMaster);
     }
     onMasterEditMatched(): void {
         (this.getModel("appView")as JSONModel).setProperty("/layout", "OneColumn");
         this.masterModel.setProperty("/mode", EditableView.mode.Edit);
+        this.masterModel.setProperty("/listItemType", ListType.Detail);
         this.masterModel.setProperty("/listMode", ListMode.Delete);
         (this.getOwnerComponent() as Component).listSelector.clearMasterListSelection();
     }
@@ -107,10 +110,17 @@ export default class MasterController extends BaseController {
     onSelectionChange(event: Event) {
         let list = event.getSource() as List;
         let selected = event.getParameter("selected");
+        const listItem = event.getParameter("listItem") || event.getSource();
         if (!(list.getMode() === "MultiSelect" && !selected)) {
-            this.showDetail(event.getParameter("listItem") || event.getSource());
-
+            this.showDetail(listItem);
         }
+    }
+
+    onStationEdit(event: Event) {
+        const stationItem = event.getSource() as ObjectListItem;
+        this.getRouter().navTo("stationEdit", {
+            stationGuid: stationItem.getBindingContext().getProperty("guid")
+        });
     }
 
     private applyFilterSearch(): void {

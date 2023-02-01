@@ -73,7 +73,8 @@
 
                 <items>
                     <ObjectListItem
-                        type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}"
+                        type="{masterView>/listItemType}"
+                        detailPress=".onStationEdit"
                         press=".onSelectionChange"
                         title="{name}">
                     </ObjectListItem>
