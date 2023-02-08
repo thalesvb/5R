@@ -13,7 +13,7 @@
     <semantic:SemanticPage id="page"
         busy="{detailView>/busy}"
         busyIndicatorDelay="{detailView>/delay}"
-        showFooter="true">
+        showFooter="false">
         <semantic:titleHeading>
             <Title
                 text="{name}"/>
