@@ -30,8 +30,8 @@
                 <Button press=".togglePlay" icon="{stationView>/playbackButton}" type="Transparent"/>
                 <Button press=".onStop" icon="sap-icon://stop" type="Transparent"/>
                 
-                <Slider value="100" width="10em" liveChange=".handleVolumeSlider"/>
-                <Button press=".toggleMute" icon="{stationView>/volumeIcon}" type="Transparent"/>
+                <Slider value="100" width="10em" liveChange=".handleVolumeSlider" visible="{device>/system/desktop}"/>
+                <Button press=".toggleMute" icon="{stationView>/volumeIcon}" type="Transparent" visible="{device>/system/desktop}"/>
                 <html:audio id="audioPlayer"
                     controls="true"
                     style="display:none;"
@@ -40,6 +40,7 @@
         </semantic:content>
         <semantic:editAction>
             <semantic:EditAction id="edit"
+                visible="{device>/system/desktop}"
                 press=".onEdit"/>
         </semantic:editAction>
         <semantic:closeAction>
