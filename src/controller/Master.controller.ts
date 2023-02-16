@@ -56,6 +56,7 @@ export default class MasterController extends BaseController {
     }
 
     onMasterMatched(): void {
+        (this.getOwnerComponent() as Component).listSelector.clearMasterListSelection();
         (this.getModel("appView")as JSONModel).setProperty("/layout", "OneColumn");
         this.masterModel.setProperty("/mode", EditableView.mode.Display);
         this.masterModel.setProperty("/listItemType", ListType.Active);
