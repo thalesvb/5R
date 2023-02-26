@@ -45,6 +45,7 @@
         </semantic:editAction>
         <semantic:closeAction>
             <semantic:CloseAction id="closeColumn"
+                visible="{= !${device>/system/phone}}"
                 press=".onCloseStation"/>
         </semantic:closeAction>
         <semantic:fullScreenAction>

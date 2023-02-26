@@ -17,6 +17,7 @@ export default class AppController extends BaseController {
             busy: false,
             delay: 0,
             layout: "OneColumn",
+            navButtonVisible: false,
             previousLayout: "",
             actionButtonsInfo: {
                 midColumn: {
@@ -27,6 +28,8 @@ export default class AppController extends BaseController {
         this.setModel(viewModel, "appView");
         let ownerComponent = this.getOwnerComponent() as Component;
         this.getView().addStyleClass(ownerComponent.getContentDensityClass());
+        const router = ownerComponent.getRouter();
+        router.attachRoutePatternMatched(this.onRoutePatternMatched, this);
     }
 
     handleNotificationsPress(event: Event): void {
@@ -46,5 +49,14 @@ export default class AppController extends BaseController {
         } else {
             notifManager.dismissAllNotifications();
         }
+    }
+
+    /**
+     * Listen to router changes that may affect App-wide settings.
+     * @param event
+     */
+    private onRoutePatternMatched(event: Event): void {
+        const rName = event.getParameter("name");
+        (this.getModel("appView") as JSONModel).setProperty("/navButtonVisible", rName !== "master");
     }
 }
