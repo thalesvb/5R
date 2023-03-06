@@ -31,8 +31,10 @@ builder:
           - "**/*.js"
           - "!**/sw.js"
           - "!**/Component-preload.js"
-    - name: cacheBusterShaker
+    - name: cacheBusterSqueezer
       afterTask: generateCachebusterInfo
+    - name: cacheBusterShaker
+      afterTask: cacheBusterSqueezer
 
 server:
   customMiddleware:
@@ -62,3 +64,13 @@ metadata:
   name: cacheBusterShaker
 task:
   path: task/CacheBusterShaker.js
+
+---
+specVersion: "2.6"
+kind: extension
+type: task
+metadata:
+  name: cacheBusterSqueezer
+task:
+  path: task/CacheBusterSqueezer.js
+
