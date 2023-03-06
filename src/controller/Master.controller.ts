@@ -9,9 +9,11 @@ import FilterType from "sap/ui/model/FilterType";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import ListBinding from "sap/ui/model/ListBinding";
 import Component from "src/Component";
+import { Channel, PlayerEvent } from "./../model/EventBusEnum";
 import LocalStorageModel from "src/model/LocalStorageModel";
 import BaseController from "./BaseController";
 import EditableView from "./util/EditableView";
+import SearchField from "sap/m/SearchField";
 
 type FilterState = {
     search: Filter[]
@@ -53,6 +55,8 @@ export default class MasterController extends BaseController {
         this.filterState = {
             search: []
         };
+        const evtBus = this.getOwnerComponent().getEventBus();
+        evtBus.subscribe(Channel.Player, PlayerEvent.Search, this.onEventPublished, this);
     }
 
     onMasterMatched(): void {
@@ -126,6 +130,17 @@ export default class MasterController extends BaseController {
 
     private applyFilterSearch(): void {
         (this.list.getBinding("items") as ListBinding).filter(this.filterState.search, FilterType.Application)
+    }
+
+    private onEventPublished(channel: string, eventId: String, data: any) {
+        switch (eventId) {
+            case PlayerEvent.Search:
+                // Sync Playlist search input and dispatch search.
+                const query = data.getParameter("query");
+                (this.byId("searchField") as SearchField).setValue(query);
+                this.onSearch(data);
+                break;
+        }
     }
 
     private showDetail(item: any): void {

@@ -21,6 +21,20 @@
                     showNotifications="true"
                     notificationsPressed=".handleNotificationsPress"
                     notificationsNumber="{= ${notifications>/}.length}">
+                    <f:searchManager>
+                        <f:SearchManager id="searchField"
+                            search="handleSearch"
+                            enableSuggestions="true"
+                            suggestionItems="{
+                                path: '/stations',
+                                sorter: { path: 'name' }
+                            }"
+                            suggest="handleSearchSuggest">
+                            <f:suggestionItems>
+                                <SuggestionItem text="{name}" key="{guid}"/>
+                            </f:suggestionItems>
+                        </f:SearchManager>
+                    </f:searchManager>
                 </f:ShellBar>
             </customHeader>
             <content>
