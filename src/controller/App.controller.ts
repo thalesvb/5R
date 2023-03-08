@@ -62,7 +62,6 @@ export default class AppController extends BaseController {
         if (suggestionItem) {
             const station = suggestionItem.getBindingContext().getProperty("guid");
             let replace = !DeviceSystem.phone;
-            (this.getModel("appView") as JSONModel).setProperty("/layout", "TwoColumnsMidExpanded");
             this.getRouter().navTo("stationPlayer", {
                 stationGuid: station
             }, undefined, replace);

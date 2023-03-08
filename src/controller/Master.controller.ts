@@ -145,7 +145,6 @@ export default class MasterController extends BaseController {
 
     private showDetail(item: any): void {
         let replace = !DeviceSystem.phone;
-        (this.getModel("appView") as JSONModel).setProperty("/layout", "TwoColumnsMidExpanded");
         this.getRouter().navTo("stationPlayer", {
             stationGuid: (item as ObjectListItem).getBindingContext().getProperty("guid")
         }, undefined, replace);

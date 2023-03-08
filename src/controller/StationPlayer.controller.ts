@@ -78,14 +78,7 @@ export default class StationPlayerController extends BaseController {
         let appViewModel = this.getModel("appView") as JSONModel;
         let fullScreen = appViewModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
         appViewModel.setProperty("/actionButtonsInfo/midColumn/fullScreen", !fullScreen);
-        if (!fullScreen) {
-            // store current layout and go full screen
-            appViewModel.setProperty("/previousLayout", appViewModel.getProperty("/layout"));
-            appViewModel.setProperty("/layout", "MidColumnFullScreen");
-        } else {
-            // reset to previous layout
-            appViewModel.setProperty("/layout", appViewModel.getProperty("/previousLayout"));
-        }
+        this.calculateLayout();
     }
 
     togglePlay(): void {
@@ -112,6 +105,23 @@ export default class StationPlayerController extends BaseController {
             }
         });
     }
+
+    private calculateLayout(): void {
+        const appViewModel = this.getModel("appView") as JSONModel;
+        const fullScreen = appViewModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
+        if (fullScreen) {
+            // Store previous layout when enteriing fullscreen, otherwise do nothing.
+            const currentLayout = appViewModel.getProperty("/layout");
+            if (currentLayout !== "MidColumnFullScreen") {
+                appViewModel.setProperty("/previousLayout", appViewModel.getProperty("/layout"));
+                appViewModel.setProperty("/layout", "MidColumnFullScreen");
+            }
+        } else {
+            // reset to previous layout
+            appViewModel.setProperty("/layout", appViewModel.getProperty("/previousLayout"));
+        }
+    }
+
     private onBindingChange(): void {
         let elementBinding = this.getView().getElementBinding();
         let boundContext = elementBinding.getBoundContext();
@@ -135,8 +145,14 @@ export default class StationPlayerController extends BaseController {
     private onStationMatched(event: Event): void {
         let args = event.getParameter("arguments");
         this.stationGuid = args.stationGuid;
-        if (this.getModel("appView").getProperty("/layout") !== "MidColumnFullScreen") {
-            (this.getModel("appView") as JSONModel).setProperty("/layout", "TwoColumnsMidExpanded");
+        const appViewModel = this.getModel("appView") as JSONModel;
+        const fullScreen = appViewModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
+        if (fullScreen) {
+            this.calculateLayout()
+        } else {
+            if (appViewModel.getProperty("/layout") === "OneColumn") {
+                appViewModel.setProperty("/layout", "TwoColumnsMidExpanded");
+            }
         }
         let storedStations = ((this.getModel() as JSONModel).getData() as AppStorage).stations;
         let stationIndex = storedStations.findIndex(station => station.guid === this.stationGuid);
