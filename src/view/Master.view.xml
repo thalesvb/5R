@@ -76,6 +76,7 @@
                         type="{masterView>/listItemType}"
                         detailPress=".onStationEdit"
                         press=".onSelectionChange"
+                        icon="{cover}"
                         title="{name}">
                     </ObjectListItem>
                 </items>

@@ -5,6 +5,7 @@
 type Station = {
     guid: string,
     name: string,
+    cover: string,
     url: string
 }
 

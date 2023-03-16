@@ -28,6 +28,14 @@
                     path: 'url',
                     type: 'thalesvb.5R.model.UrlType'
                     }"/>
+                <Label text="{i18n>stationCoverLabel}"/>
+                <Input id="cover"
+                    value="{
+                    path: 'cover',
+                    type: 'thalesvb.5R.model.UrlType'
+                    }"/>
+                <ImageContent id="coverPreview"
+                    src="{cover}"/>
             </f:content>
         </f:SimpleForm>
     </VBox>
