@@ -5,6 +5,8 @@ import JSONModel from "sap/ui/model/json/JSONModel"
 import Component from "src/Component";
 import BaseController from "./BaseController";
 import MediaSession from "../util/MediaSession";
+import Visualization from "../module/player/Visualization";
+import HTML from "sap/ui/core/HTML";
 
 /**
  * @copyright ${copyright}
@@ -23,20 +25,21 @@ export default class StationPlayerController extends BaseController {
     private audioControl: UI5Element;
     private whenAudioElementAvailable: Promise<HTMLAudioElement>;
     private fnAudioElementAvailable: Function;
-    onInit(): void {
+     onInit(): void {
         this.audioControl = this.byId("audioPlayer");
         this.stationModel = new JSONModel({
             "playbackButton" : StationPlayerController.icon_play,
+            "visualizationEnabled": false,
             "volumeIcon": StationPlayerController.icon_sound_loud
         });
         this.setModel(this.stationModel, "stationView");
         this.getRouter().getRoute("stationPlayer").attachPatternMatched(this.onStationMatched, this);
         this.whenAudioElementAvailable = new Promise((resolve) => this.fnAudioElementAvailable = resolve);
         this.whenAudioElementAvailable = this.whenAudioElementAvailable.then((audio) => {
-            audio.addEventListener('play',() => this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_pause));
-            audio.addEventListener('pause',() => this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play));
-            audio.addEventListener('suspend',() => this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play));
-            audio.addEventListener('ended',() => this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play));
+            audio.addEventListener('play', this.onAudioPlay.bind(this), { passive: true });
+            audio.addEventListener('pause', this.onAudioPause.bind(this), { passive: true });
+            audio.addEventListener('suspend', this.onAudioPause.bind(this), { passive: true });
+            audio.addEventListener('ended', this.onAudioPause.bind(this), { passive: true });
             audio.addEventListener('volumechange',() => {
                 if (audio.muted) {
                     this.stationModel.setProperty("/volumeIcon", StationPlayerController.icon_sound_off);
@@ -45,6 +48,7 @@ export default class StationPlayerController extends BaseController {
                 }
             });
             MediaSession.hookStopAction(()=>this.onStop());
+            Visualization.linkAudioElement(audio);
             return audio;
         });
     }
@@ -67,11 +71,17 @@ export default class StationPlayerController extends BaseController {
     }
 
     onStop(): void {
+        // TODO: A call to audio.pause and at same time changing src does not trigger paused event.
+        //       Maybe there is a way to having it triggered to avoid needing to call the related code
+        //       here.
+        const audioPauseCode = this.onAudioPause.bind(this);
+
         this.whenAudioElementAvailable.then((audio) => {
+            audioPauseCode();
             audio.src = '';
             audio.removeAttribute('src');
-            this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play)
-        })
+            this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play);
+        });
     }
 
     toggleFullScreen(): void {
@@ -82,19 +92,48 @@ export default class StationPlayerController extends BaseController {
     }
 
     togglePlay(): void {
+        const that = this;
         this.whenAudioElementAvailable.then((audio) => {
             if (!audio.src) {
                 audio.src = this.currentStation.url;
             }
-            if (audio.paused)
+            if (audio.paused) {
                 audio.play();
-            else {
+            } else {
                 audio.pause();
             }
         });
     }
     toggleMute(): void {
         this.whenAudioElementAvailable.then((audio) => { audio.muted = !audio.muted });
+    }
+
+    toggleVisualization(): void {
+        const that = this;
+        this.whenAudioElementAvailable.then((audio) => {
+            let visualizationEnabled = !that.stationModel.getProperty("/visualizationEnabled");
+            if (visualizationEnabled) {
+                // When started hidden, HTML Canvas element is not available yet to fetch by JS,
+                // UI5 only creates it when wrapper turns visible for first time.
+                const visWrapper = that.byId("visualizationWrapper") as HTML;
+                const afterRender = () => {
+                    const visCanvas = document.getElementById("visualizer") as HTMLCanvasElement;
+                    Visualization.display(visCanvas);
+                    if (!audio.paused) {
+                        Visualization.start();
+                    }
+                    visWrapper.detachAfterRendering(afterRender);
+                }
+                visWrapper.attachAfterRendering({}, afterRender);
+            }
+            that.stationModel.setProperty("/visualizationEnabled", visualizationEnabled);
+
+            if (!visualizationEnabled) {
+                Visualization.stop();
+            } else if (document.getElementById("visualizer") && !audio.paused) {
+                Visualization.start();
+            }
+        });
     }
 
     private bindView(bindingPath: string): void {
@@ -119,6 +158,20 @@ export default class StationPlayerController extends BaseController {
         } else {
             // reset to previous layout
             appViewModel.setProperty("/layout", appViewModel.getProperty("/previousLayout"));
+        }
+    }
+
+    private onAudioPause(): void {
+        this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play);
+        if (this.stationModel.getProperty("/visualizationEnabled")) {
+            Visualization.stop();
+        }
+    }
+
+    private onAudioPlay(): void {
+        this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_pause);
+        if (this.stationModel.getProperty("/visualizationEnabled")) {
+            Visualization.start();
         }
     }
 
@@ -160,9 +213,7 @@ export default class StationPlayerController extends BaseController {
     }
 
     onCloseStation(): void {
-        let audio = this.audioControl.getDomRef() as HTMLAudioElement;
-        audio.pause();
-        audio.src = "";
+        this.onStop();
 
         (this.getModel("appView") as JSONModel).setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
         (this.getOwnerComponent() as Component).listSelector.clearMasterListSelection();
