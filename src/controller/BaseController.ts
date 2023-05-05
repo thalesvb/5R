@@ -28,12 +28,12 @@ export default class BaseController extends Controller {
     protected getResourceBundle(): ResourceBundle | Promise<ResourceBundle> {
         return (this.getOwnerComponent().getModel("i18n") as ResourceModel).getResourceBundle();
     }
-    public onNavBack(): void {
+    public onNavBack(target: string = "master"): void {
         var previousHash = History.getInstance().getPreviousHash();
         if (previousHash !== undefined) {
             history.go(-1);
         } else {
-            this.getRouter().navTo("master", undefined, undefined, true);
+            this.getRouter().navTo(target, undefined, undefined, true);
         }
     }
 

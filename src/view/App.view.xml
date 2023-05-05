@@ -16,7 +16,7 @@
             <customHeader>
                 <f:ShellBar
                     title="{i18n>appTitle}"
-                    navButtonPressed=".onNavBack"
+                    navButtonPressed=".onNavBack('master')"
                     showNavButton="{appView>/navButtonVisible}"
                     showNotifications="true"
                     notificationsPressed=".handleNotificationsPress"
