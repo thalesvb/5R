@@ -1,0 +1,81 @@
+<!--
+    @copyright@
+-->
+<mvc:View
+    controllerName="thalesvb.5R.controller.PlaylistImporter"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form">
+    
+        <f:DynamicPage
+            stickySubheaderProvider="ImportWizardProvider"
+            toggleHeaderOnTitleClick="false"
+            class="sapUiNoContentPadding"
+            showFooter="true">
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title text="{i18n>playlists_importWizardTitle}"/>
+                    </f:heading>
+                </f:DynamicPageTitle>
+            </f:title>
+            <f:content>
+                <Wizard id="importerWizard"
+                    class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
+                    showNextButton="true"
+                    navigationChange="handleNavigationChange"
+                    renderMode="Page"
+                    complete="onSubmit"
+                    finishButtonText="{i18n>playlists_importWizardFinishAction}">
+
+                    <WizardStep id="sourceStep"
+                        title="{i18n>playlists_sourceStepTitle}"
+                        validated="false"
+                        activate="sourceStepActivate">
+                        <form:SimpleForm
+                            editable="true">
+                            <Label />
+                            <Button id="pickLocalFile"
+                                press="pickLocalFile"
+                                text="{i18n>playlists_localFileAction}"
+                                icon=""/>
+                            <Input id="remoteSourceUrl"
+                                visible="false"
+                                required="true"
+                                liveChange="sourceStepValidation"
+                                submit="sourceStepValidation"
+                                valueLiveUpdate="true"
+                                value="{
+                                    path: 'importer>/remoteUrl',
+                                    type: 'thalesvb.5R.model.UrlType'
+                                }"/>
+                        </form:SimpleForm>
+                    </WizardStep>
+
+                    <WizardStep id="pickEntriesStep"
+                        activate="pickEntriesActivate"
+                        title="{i18n>playlist_pickEntriesStepTitle}">
+                        <Table
+                            items="{importer>/entries}">
+                            <columns>
+                                <Column>
+                                    <Text text="{i18n>stationNameLabel}"/>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>stationUrlLabel}"/>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                <Input value="{importer>name}"/>
+                                <Input value="{importer>url}"/>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </WizardStep>
+                </Wizard>
+            </f:content>
+        </f:DynamicPage>
+</mvc:View>

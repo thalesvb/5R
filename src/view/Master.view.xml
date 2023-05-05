@@ -52,6 +52,13 @@
                                 formatter: '.editableFormatter.display'
                             }"
                             icon="sap-icon://add"/>
+                        <Button id="importStation"
+                            press=".onImportStation"
+                            visible="{
+                                path: 'masterView>/mode',
+                                formatter: '.editableFormatter.edit'
+                            }"
+                            icon="sap-icon://add-document"/>
                         <Button id="editStationList"
                             press=".onEditStationList"
                             visible="{

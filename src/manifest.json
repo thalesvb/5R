@@ -115,6 +115,11 @@
                     "target": "master"
                 },
                 {
+                    "pattern": "Playlist/import",
+                    "name": "playlistImporter",
+                    "target": "playlistImporter"
+                },
+                {
                     "pattern": "Station/create",
                     "name": "stationCreate",
                     "target": [
@@ -144,6 +149,11 @@
                     "name": "Master",
                     "level": 1,
                     "id": "master"
+                },
+                "playlistImporter": {
+                    "name": "PlaylistImporter",
+                    "level": 1,
+                    "id": "playlistImporter"
                 },
                 "stationDetail": {
                     "name": "StationDetail",

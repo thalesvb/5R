@@ -25,8 +25,8 @@ export default class BaseController extends Controller {
     protected setModel(model: Model, name?: string): View {
         return this.getView().setModel(model, name);
     }
-    protected getResourceBundle(): ResourceBundle | Promise<ResourceBundle> {
-        return (this.getOwnerComponent().getModel("i18n") as ResourceModel).getResourceBundle();
+    protected getResourceBundle(): ResourceBundle {
+        return (this.getOwnerComponent().getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;
     }
     public onNavBack(target: string = "master"): void {
         var previousHash = History.getInstance().getPreviousHash();

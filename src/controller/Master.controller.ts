@@ -99,6 +99,10 @@ export default class MasterController extends BaseController {
         this.getRouter().navTo("master", undefined, undefined, true);
     }
 
+    onImportStation(): void {
+        this.getRouter().navTo("playlistImporter");
+    }
+
     onSearch(event: Event) {
         let query = event.getParameter("newValue");
         if (!query) {
