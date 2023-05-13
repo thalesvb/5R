@@ -45,12 +45,6 @@
                     <Slider value="100" width="10em" liveChange=".handleVolumeSlider" visible="{device>/system/desktop}"/>
                     <Button press=".toggleMute" icon="{stationView>/volumeIcon}" type="Transparent" visible="{device>/system/desktop}"/>
                     <Button press=".toggleVisualization" icon="sap-icon://image-viewer" type="Transparent" visible="{device>/system/desktop}"/>
-                    <html:audio id="audioPlayer"
-                        controls="true"
-                        style="display:none;"
-                        crossorigin="anonymous"
-                        preload="none"
-                        />
                         </items>
                 </HBox>
             </VBox>
