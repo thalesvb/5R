@@ -5,14 +5,16 @@ import BaseController from "./BaseController";
 import MediaSession from "../util/MediaSession";
 import Visualization from "../module/player/Visualization";
 import HTML from "sap/ui/core/HTML";
-import Message from "sap/ui/core/message/Message";
-import NotificationManager from "../util/NotificationManager";
+import { IMediaPlayer } from "../module/player/device/IMediaPlayer";
+import LocalPlayer from "../module/player/device/LocalPlayer";
+import GCaster from "../module/player/device/GCaster";
+import { MediaPlayerEvents } from "../module/player/MediaPlayerEvents";
 
 /**
  * @copyright ${copyright}
  * @namespace thalesvb.5R.controller
  */
-export default class StationPlayerController extends BaseController {
+export default class StationPlayerController extends BaseController implements EventTarget {
     private static readonly icon_pause = "sap-icon://media-pause";
     private static readonly icon_play = "sap-icon://media-play";
     private static readonly icon_sound_off = "sap-icon://sound-off";
@@ -22,30 +24,22 @@ export default class StationPlayerController extends BaseController {
     private stationModel: JSONModel;
     private stationGuid: string;
     private currentStation: Station;
-    private audio: HTMLAudioElement;
+    private player: IMediaPlayer;
+    private localPlayer: LocalPlayer;
+    private mpDispatcher: MediaPlayerEvents;
+    private isPlaying: boolean;
 
-     onInit(): void {
-        this.audio = (()=>{
-            const a = new Audio();
-            a.crossOrigin = "anonymoys";
-            a.preload = "none";
-            a.addEventListener('play', this.onAudioPlay.bind(this), { passive: true });
-            a.addEventListener('pause', this.onAudioPause.bind(this), { passive: true });
-            a.addEventListener('ended', this.onAudioPause.bind(this), { passive: true });
-            a.addEventListener('volumechange',() => {
-                if (a.muted) {
-                    this.stationModel.setProperty("/volumeIcon", StationPlayerController.icon_sound_off);
-                } else {
-                    this.stationModel.setProperty("/volumeIcon", a.volume < 0.5 ? StationPlayerController.icon_sound_low : StationPlayerController.icon_sound_loud );
-                }
-            });
-            MediaSession.hookStopAction(()=>this.onStop());
-            Visualization.linkAudioElement(a);
-            return a;
-        })();
+    onInit(): void {
+        this.mpDispatcher = new MediaPlayerEvents(this);
+        this.localPlayer = new LocalPlayer();
+        this.localPlayer.bindUI(this.mpDispatcher);
+        this.player = this.localPlayer;
+        new GCaster(this.switchPlayer.bind(this));
+        MediaSession.hookStopAction(()=>this.onStop());
         this.stationModel = new JSONModel({
             "playbackButton" : StationPlayerController.icon_play,
             "visualizationEnabled": false,
+            "volume": 100,
             "volumeIcon": StationPlayerController.icon_sound_loud
         });
         this.setModel(this.stationModel, "stationView");
@@ -54,12 +48,7 @@ export default class StationPlayerController extends BaseController {
 
     handleVolumeSlider(event: Event) {
         let volume = event.getParameter("value");
-        ((a: HTMLAudioElement) => {
-            a.volume = volume/100;
-            if (a.muted) {
-                a.muted = false;
-            }
-        })(this.audio);
+        this.volumeChange(volume);
     }
 
     onEdit(): void {
@@ -74,9 +63,22 @@ export default class StationPlayerController extends BaseController {
         //       Maybe there is a way to having it triggered to avoid needing to call the related code
         //       here.
         this.onAudioPause();
-        this.audio.src = '';
-        this.audio.removeAttribute('src');
+        this.player.stop();
         this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play);
+    }
+
+    private switchPlayer(player: IMediaPlayer) {
+        this.player.stop();
+        this.player.unbindUI(this.mpDispatcher);
+        if (player) {
+            this.player = player;
+        } else {
+            this.player = this.localPlayer;
+        }
+        this.player.bindUI(this.mpDispatcher);
+        if (this.isPlaying) {
+            this.player.togglePlay(this.currentStation);
+        }
     }
 
     toggleFullScreen(): void {
@@ -87,27 +89,16 @@ export default class StationPlayerController extends BaseController {
     }
 
     togglePlay(): void {
-        const that = this;
-        ((a: HTMLAudioElement) => {
-            if (!a.src) {
-                a.src = this.currentStation.url;
-            }
-            if (a.paused) {
-                a.play().catch((reason) => {
-                    const notif = NotificationManager.getInstance();
-                    notif.addNotifications(new Message({message: reason}));
-                    a.pause();
-                });
-            } else {
-                a.pause();
-            }
-        })(this.audio);
+        this.player.togglePlay(this.currentStation);
     }
+
     toggleMute(): void {
-        this.audio.muted = !this.audio.muted;
+        let volumeIcon: string;
+        this.player.toggleMute();
     }
 
     toggleVisualization(): void {
+        Visualization.linkAudioElement(this.localPlayer.audio);
         const that = this;
         let visualizationEnabled = !that.stationModel.getProperty("/visualizationEnabled");
         if (visualizationEnabled) {
@@ -117,7 +108,7 @@ export default class StationPlayerController extends BaseController {
             const afterRender = () => {
                 const visCanvas = document.getElementById("visualizer") as HTMLCanvasElement;
                 Visualization.display(visCanvas);
-                if (!this.audio.paused) {
+                if (!this.localPlayer.audio.paused) {
                     Visualization.start();
                 }
                 visWrapper.detachAfterRendering(afterRender);
@@ -128,7 +119,7 @@ export default class StationPlayerController extends BaseController {
 
         if (!visualizationEnabled) {
             Visualization.stop();
-        } else if (document.getElementById("visualizer") && !this.audio.paused) {
+        } else if (document.getElementById("visualizer") && !this.localPlayer.audio.paused) {
             Visualization.start();
         }
     }
@@ -159,13 +150,25 @@ export default class StationPlayerController extends BaseController {
     }
 
     private onAudioPause(): void {
+        this.isPlaying = false;
         this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_play);
         if (this.stationModel.getProperty("/visualizationEnabled")) {
             Visualization.stop();
         }
     }
 
+    private onAudioMute(): void {
+        this.stationModel.setProperty("/volumeIcon", StationPlayerController.icon_sound_off);
+    }
+
+    private onAudioUnmute(): void {
+        const volume = this.stationModel.getProperty("/volume");
+        const volumeIcon = volume < 50 ? StationPlayerController.icon_sound_low : StationPlayerController.icon_sound_loud;
+        this.stationModel.setProperty("/volumeIcon", volumeIcon);
+    }
+
     private onAudioPlay(): void {
+        this.isPlaying = true;
         this.stationModel.setProperty("/playbackButton", StationPlayerController.icon_pause);
         if (this.stationModel.getProperty("/visualizationEnabled")) {
             Visualization.start();
@@ -212,4 +215,34 @@ export default class StationPlayerController extends BaseController {
         (this.getOwnerComponent() as Component).listSelector.clearMasterListSelection();
         this.getRouter().navTo("master");
     }
+
+    addEventListener(type: string, callback: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void {
+        throw new Error("Method not implemented.");
+    }
+
+    dispatchEvent(event: globalThis.Event): boolean {
+        switch(event.type) {
+            case "paused": this.onAudioPause(); break;
+            case "playing": this.onAudioPlay(); break;
+            case "stopped": this.onAudioPause(); break;
+            case "muted": this.onAudioMute(); break;
+            case "unmuted": this.onAudioUnmute(); break;
+            case "volumeChanged": this.volumeChange((event as CustomEvent).detail, true);
+            default: return false;
+        }
+        return true;
+    }
+
+    removeEventListener(type: string, callback: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void {
+        throw new Error("Method not implemented.");
+    }
+
+    private volumeChange(volume: number, updateSlider?: boolean): void {
+        this.player.changeVolume(volume);
+        this.stationModel.setProperty("/volumeIcon", volume < 50 ? StationPlayerController.icon_sound_low : StationPlayerController.icon_sound_loud );
+        if(updateSlider) {
+            this.stationModel.setProperty("/volume", volume);
+        }
+    }
+
 }
