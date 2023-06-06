@@ -13,6 +13,9 @@ module.exports = async function ChacheBusterShaker({dependencies, log, options, 
   let cachebusterInfo = JSON.parse(await cachebusterInfoResources[0].getString());
 
   for (var resourcePath in cachebusterInfo) {
+    if (config.excludes?.includes(resourcePath)) {
+      continue;
+    }
     let resource = await workspace.byPath("/resources/"+options.projectNamespace+"/"+resourcePath);
     if(resource && !taskUtil.getTag(resource, taskUtil.STANDARD_TAGS.OmitFromBuildResult)) {
       // TODO: find a better way to move file, because with CLI v3 it seems to flush file to workspace before reaching here,
