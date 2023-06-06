@@ -4,7 +4,7 @@
  * doesn't move properly to correct folder.
  */
 // eslint-disable-next-line no-unused-vars
-module.exports = async function ChacheBusterShaker({ workspace, dependencies, taskUtil, options }) {
+module.exports = async function ChacheBusterShaker({dependencies, log, options, taskUtil, workspace}) {
   const config = options.configuration;
   const cachebusterInfoResources = await workspace.byGlob("**/sap-ui-cachebuster-info.json");
   if (cachebusterInfoResources.length !== 1) {
@@ -15,7 +15,12 @@ module.exports = async function ChacheBusterShaker({ workspace, dependencies, ta
   for (var resourcePath in cachebusterInfo) {
     let resource = await workspace.byPath("/resources/"+options.projectNamespace+"/"+resourcePath);
     if(resource && !taskUtil.getTag(resource, taskUtil.STANDARD_TAGS.OmitFromBuildResult)) {
-      resource.setPath("/resources/"+options.projectNamespace+ "/~" + cachebusterInfo[resourcePath] + "~/"+resourcePath);
+      // TODO: find a better way to move file, because with CLI v3 it seems to flush file to workspace before reaching here,
+      //       and a simple setPath will actually create a second file in different path instead moving it.
+      const movedResource = await resource.clone();
+      taskUtil.setTag(resource, taskUtil.STANDARD_TAGS.OmitFromBuildResult)
+      movedResource.setPath("/resources/"+options.projectNamespace+ "/~" + cachebusterInfo[resourcePath] + "~/"+resourcePath);
+      workspace.write(movedResource);
     }
   }
 };

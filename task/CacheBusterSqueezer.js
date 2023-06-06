@@ -2,7 +2,7 @@
  * Trim CacheBuster info file by removing entries related to files omitted from build.
  */
 // eslint-disable-next-line no-unused-vars
-module.exports = async function ChacheBusterSqueezer({ workspace, dependencies, taskUtil, options }) {
+module.exports = async function ChacheBusterSqueezer({dependencies, log, options, taskUtil, workspace}) {
   const config = options.configuration;
   const cachebusterInfoResources = await workspace.byGlob("**/sap-ui-cachebuster-info.json");
   if (cachebusterInfoResources.length !== 1) {
@@ -18,4 +18,5 @@ module.exports = async function ChacheBusterSqueezer({ workspace, dependencies, 
     }
   }
   cachebusterInfoRes.setString(JSON.stringify(cachebusterInfo, null, 2));
+  workspace.write(cachebusterInfoRes);
 };
