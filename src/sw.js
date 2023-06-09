@@ -83,6 +83,9 @@ class CacheBusterWorker {
 }
 
 self.addEventListener('fetch', function(e) {
+    if(e.request.destination === "audio") {
+        return;
+    }
     e.respondWith(
         (async() => {
             return (await CacheBusterWorker.getInstance()).fetchHandler(e);
