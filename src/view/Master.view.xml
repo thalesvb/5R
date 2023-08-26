@@ -26,7 +26,8 @@
                 growingScrollToLoad="true"
                 delete=".onDelete"
                 updateFinished=".onUpdateFinished"
-                selectionChange=".onSelectionChange">
+                selectionChange=".onSelectionChange"
+                sticky="HeaderToolbar">
 
                 <headerToolbar>
                     <OverflowToolbar>
