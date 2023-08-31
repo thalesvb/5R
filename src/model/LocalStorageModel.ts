@@ -38,6 +38,11 @@ import {Type as StorageType} from "sap/ui/util/Storage"
         return stations.findIndex(station => station.guid === stationGuid);
     }
 
+    revert(): void {
+        this.load();
+        this.refresh(true);
+    }
+
     save(): void {
         let data = this.getData();
         let serializedData = JSON.stringify(data);
@@ -48,10 +53,10 @@ import {Type as StorageType} from "sap/ui/util/Storage"
         const storage = this.getData() as AppStorage;
         let idx = LocalStorageModel.findStationIndex(storage.stations, guid);
         const station = storage.stations[idx];
-        storage.stations.splice(index, 0, station);
 
+        storage.stations.splice(index, 0, station);
         storage.stations.splice(idx < index ? idx : idx+1, 1);
-        this.save();
+
         this.setData(storage);
         this.refresh(true);
     }
@@ -60,12 +65,12 @@ import {Type as StorageType} from "sap/ui/util/Storage"
         let storage = this.getData() as AppStorage;
         let idx = LocalStorageModel.findStationIndex(storage.stations, guid);
         storage.stations.splice(idx,1);
-        this.save();
+
         this.setData(storage);
         this.refresh(true);
     }
 
-    saveStation(station: Station): void {
+    addStation(station: Station): void {
         let storage = this.getData() as AppStorage;
         if (station.guid === undefined) {
             station.guid = crypto.randomUUID();
@@ -74,7 +79,7 @@ import {Type as StorageType} from "sap/ui/util/Storage"
             let stationIndex = LocalStorageModel.findStationIndex(storage.stations, station.guid);
             storage.stations[stationIndex] = station;
         }
-        this.save();
+
         this.setData(storage);
         this.refresh(true);
     }

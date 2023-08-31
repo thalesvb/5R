@@ -68,6 +68,13 @@
                                 formatter: '.editableFormatter.display'
                             }"
                             icon="sap-icon://edit"/>
+                        <Button id="CancelEditStationList"
+                            press=".onCancelEditStationList"
+                            visible="{
+                                path: 'masterView>/mode',
+                                formatter: '.editableFormatter.edit'
+                            }"
+                            text="{i18n>playlist_cancel}" />
                         <Button id="doneEditStationList"
                             press=".onDoneEditStationList"
                             visible="{
@@ -75,7 +82,7 @@
                                 formatter: '.editableFormatter.edit'
                             }"
                             type="Emphasized"
-                            text="Done" />
+                            text="{i18n>playlist_save}" />
 
                     </OverflowToolbar>
                 </headerToolbar>

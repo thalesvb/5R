@@ -85,6 +85,12 @@ export default class MasterController extends BaseController {
         this.list.removeSelections(true);
     }
 
+    onCancelEditStationList(): void {
+        const model = this.getModel() as LocalStorageModel;
+        model.revert();
+        this.getRouter().navTo("master", undefined, undefined, true);
+    }
+
     onEditStationList(): void {
         this.getRouter().navTo("masterEdit", undefined, undefined, true);
     }
@@ -97,6 +103,8 @@ export default class MasterController extends BaseController {
     }
 
     onDoneEditStationList(): void {
+        let model = this.getModel() as LocalStorageModel;
+        model.save();
         this.getRouter().navTo("master", undefined, undefined, true);
     }
 

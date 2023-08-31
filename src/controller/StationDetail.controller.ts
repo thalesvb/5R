@@ -75,7 +75,8 @@ export default class StationDetailController extends BaseController {
     onSave(): void {
         let stationData = (this.page.getModel() as JSONModel).getData() as Station;
         let storageModel = this.getModel() as LocalStorageModel;
-        storageModel.saveStation(stationData);
+        storageModel.addStation(stationData);
+        storageModel.save();
 
         (this.getModel("appView") as JSONModel).setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
         (this.getOwnerComponent() as Component).listSelector.clearMasterListSelection();

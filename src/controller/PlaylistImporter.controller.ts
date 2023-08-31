@@ -35,7 +35,7 @@ export default class PlaylistImporter extends BaseController {
     onSubmit(): void {
         const entriesToAdd = this.getView().getModel("importer").getProperty("/entries") as Station[];
         let storageModel = this.getModel() as LocalStorageModel;
-        entriesToAdd.forEach(e => storageModel.saveStation(e));
+        entriesToAdd.forEach(e => storageModel.addStation(e));
         this.getRouter().navTo("masterEdit");
     }
 
