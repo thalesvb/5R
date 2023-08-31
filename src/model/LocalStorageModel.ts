@@ -44,6 +44,18 @@ import {Type as StorageType} from "sap/ui/util/Storage"
         this.storage.put(this.key, serializedData);
     }
 
+    moveStation(guid: string, index: number) {
+        const storage = this.getData() as AppStorage;
+        let idx = LocalStorageModel.findStationIndex(storage.stations, guid);
+        const station = storage.stations[idx];
+        storage.stations.splice(index, 0, station);
+
+        storage.stations.splice(idx < index ? idx : idx+1, 1);
+        this.save();
+        this.setData(storage);
+        this.refresh(true);
+    }
+
     removeStation(guid: string): void {
         let storage = this.getData() as AppStorage;
         let idx = LocalStorageModel.findStationIndex(storage.stations, guid);

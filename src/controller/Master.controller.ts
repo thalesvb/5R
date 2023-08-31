@@ -13,6 +13,7 @@ import { Channel, PlayerEvent } from "./../model/EventBusEnum";
 import LocalStorageModel from "src/model/LocalStorageModel";
 import BaseController from "./BaseController";
 import EditableView from "./util/EditableView";
+import { dnd } from "sap/ui/core/library";
 import SearchField from "sap/m/SearchField";
 
 type FilterState = {
@@ -101,6 +102,19 @@ export default class MasterController extends BaseController {
 
     onImportStation(): void {
         this.getRouter().navTo("playlistImporter");
+    }
+
+    onItemDrop(event: Event): void {
+        const draggedItem = event.getParameter("draggedControl");
+        const stationGuid = draggedItem.getBindingContext().getProperty("guid") as string;
+        
+        const droppedItem = event.getParameter("droppedControl");
+        const dropPosition = event.getParameter("dropPosition");
+        const droppedIndex = this.list.indexOfItem(droppedItem);
+        const newIndexItem = droppedIndex + (dropPosition === dnd.RelativeDropPosition.After ? 1 : 0);
+
+        const model = this.getModel() as LocalStorageModel;
+        model.moveStation(stationGuid, newIndexItem < 0 ? 0 : newIndexItem);
     }
 
     onSearch(event: Event) {
