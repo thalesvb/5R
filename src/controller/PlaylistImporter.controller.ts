@@ -55,7 +55,7 @@ export default class PlaylistImporter extends BaseController {
         const model = this.getModel("importer") as JSONModel;
         fileOpen({
             description: this.getResourceBundle().getText("playlists_fileTypeDescription"),
-            extensions: ['.jspf']
+            extensions: ['.jspf', '.xspf']
         }).then((blob) =>
             pls.importFromLocalSource(blob).then((importedEntries) => {
                 model.setProperty("/entries", importedEntries);

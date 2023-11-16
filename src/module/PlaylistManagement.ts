@@ -1,5 +1,5 @@
 import Object from "sap/ui/base/Object";
-import JspfParser from "./playlist/JspfParser";
+import { JspfParser, XspfParser } from "./playlist/XspfParser";
 
 /**
  * @copyright ${copyright}
@@ -30,6 +30,7 @@ export default class PlaylistManagement extends Object {
         }
         switch(extension.toLowerCase()) {
             case "jspf": return this.parseJspf(data);
+            case "xspf": return this.parseXspf(data);
         }
     }
 
@@ -39,6 +40,10 @@ export default class PlaylistManagement extends Object {
 
     private parseJspf(data: string): Station[] {
         return new JspfParser().parse(data);
+    }
+
+    private parseXspf(data: string): Station[] {
+        return new XspfParser().parse(data);
     }
 
     private getExtension(url: string) {
