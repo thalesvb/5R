@@ -46,6 +46,7 @@
                     <Button press=".toggleMute" icon="{stationView>/volumeIcon}" type="Transparent" visible="{device>/system/desktop}"/>
                     <Button press=".toggleVisualization" icon="sap-icon://image-viewer" type="Transparent" visible="{device>/system/desktop}"/>
                     <html:google-cast-launcher name="cast_button"/>
+                    <Button press=".onShare" icon="sap-icon://share-2" type="Transparent" visible="{: stationView>/shareApiAvailable}"/>
                         </items>
                 </HBox>
             </VBox>

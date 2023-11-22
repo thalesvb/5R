@@ -38,6 +38,7 @@ export default class StationPlayerController extends BaseController implements E
         MediaSession.hookStopAction(()=>this.onStop());
         this.stationModel = new JSONModel({
             "playbackButton" : StationPlayerController.icon_play,
+            "shareApiAvailable" : navigator.share ? true : false,
             "visualizationEnabled": false,
             "volume": 100,
             "volumeIcon": StationPlayerController.icon_sound_loud
@@ -56,6 +57,19 @@ export default class StationPlayerController extends BaseController implements E
         this.getRouter().navTo("stationEdit", {
             stationGuid: this.stationGuid
         });
+    }
+
+    onShare(): void {
+        if (!navigator.share) {
+            console.error("Web Share API not available");
+            return;
+        }
+        const station = this.currentStation;
+        navigator.share({
+            title: station.name,
+            text: station.name,
+            url: station.url
+        }).catch((error) => console.error("Error sharing", error));
     }
 
     onStop(): void {
