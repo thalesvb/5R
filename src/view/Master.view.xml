@@ -82,7 +82,8 @@
                                 formatter: '.editableFormatter.edit'
                             }"
                             type="Emphasized"
-                            text="{i18n>playlist_save}" />
+                            text="{i18n>playlist_save}"
+                            icon="sap-icon://save" />
 
                     </OverflowToolbar>
                 </headerToolbar>
