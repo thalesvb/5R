@@ -10,14 +10,21 @@
         showHeader="true">
         <headerContent>
 	        <Button id="edit"
-                text="Edit"
+                text="{i18n>stationEdit}"
                 visible="{
                     path: 'detailView>/mode',
                     formatter: '.editableFormatter.display'
                 }"
                 press="handleEditPress" />
+			<Button id="cancel"
+                text="{i18n>stationCancel}"
+                visible="{
+                    path: 'detailView>/mode',
+                    formatter: '.editableFormatter.edit'
+                }"
+                press=".onClose" />
 			<Button id="save"
-                text="Save"
+                text="{i18n>stationSave}"
                 press=".onSave"
                 type="Emphasized"
                 visible="{
@@ -25,13 +32,6 @@
                     formatter: '.editableFormatter.edit'
                 }"
                 icon="sap-icon://save" />
-			<Button id="cancel"
-                text="Cancel"
-                visible="{
-                    path: 'detailView>/mode',
-                    formatter: '.editableFormatter.edit'
-                }"
-                press=".onClose" />
         </headerContent>
         <content>
         </content>
